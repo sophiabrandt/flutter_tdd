@@ -84,6 +84,16 @@ void main() {
           expect(result, equals(Right(tNumberTrivia)));
         },
       );
+
+      test(
+          'should cache the data locally when the call to remote data source is successful',
+          () async {
+        when(mockRemoteDataSource.getConcreteNumberTrivia(any))
+            .thenAnswer((_) async => tNumberTriviaModel);
+        await repository.getConcreteNumberTrivia(tNumber);
+        verify(mockRemoteDataSource.getConcreteNumberTrivia(tNumber));
+        verify(mockLocalDataSource.cacheNumberTrivia(tNumberTriviaModel));
+      });
     });
   });
 }
