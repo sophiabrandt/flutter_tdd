@@ -5,10 +5,11 @@ import 'package:flutter_tdd/core/error/exceptions.dart';
 import 'package:flutter_tdd/core/platform/network_info.dart';
 import 'package:flutter_tdd/features/number_trivia/data/datasources/number_trivia_local_data_source.dart';
 import 'package:flutter_tdd/features/number_trivia/data/datasources/number_trivia_remote_data_source.dart';
+import 'package:flutter_tdd/features/number_trivia/data/models/number_trivia_model.dart';
 import 'package:flutter_tdd/features/number_trivia/domain/entities/number_trivia.dart';
 import 'package:flutter_tdd/features/number_trivia/domain/repositories/number_trivia_repository.dart';
 
-typedef Future<NumberTrivia> _ConcreteOrRandomChooser();
+typedef Future<NumberTriviaModel> _ConcreteOrRandomChooser();
 
 class NumberTriviaRepositoryImpl implements NumberTriviaRepository {
   final NumberTriviaRemoteDataSource remoteDataSource;
