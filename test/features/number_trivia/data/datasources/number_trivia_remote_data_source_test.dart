@@ -23,6 +23,8 @@ void main() {
 
   group('getConcretNumberTrivia', () {
     final tNumber = 1;
+    final tNumberTriviaModel =
+        NumberTriviaModel.fromJson(json.decode(fixture('trivia.json')));
 
     test('''should perform a GET request on a URL with nubmer
         as the endpoint and application/json header''', () async {
@@ -33,6 +35,17 @@ void main() {
 
       verify(mockHttpClient.get('http://numbersapi/$tNumber',
           headers: {'Content-Type': 'application/json'}));
+    });
+
+    test(
+        'should return NumberTriviaModel when the response code is 200 (success)',
+        () async {
+      when(mockHttpClient.get(any, headers: anyNamed('headers')))
+          .thenAnswer((_) async => http.Response(fixture('trivia.json'), 200));
+
+      final result = await dataSource.getConcreteNumberTrivia(tNumber);
+
+      expect(result, equals(tNumberTriviaModel));
     });
   });
 }
