@@ -21,6 +21,16 @@ void main() {
     dataSource = NumberTriviaRemoteDataSourceImpl(client: mockHttpClient);
   });
 
+  void setUpMockHttpClientSuccess200() {
+    when(mockHttpClient.get(any, headers: anyNamed('headers')))
+        .thenAnswer((_) async => http.Response(fixture('trivia.json'), 200));
+  }
+
+  void setUpMockHttpClientFailure400() {
+    when(mockHttpClient.get(any, headers: anyNamed('headers')))
+        .thenAnswer((_) async => http.Response('Something went wrong', 400));
+  }
+
   group('getConcretNumberTrivia', () {
     final tNumber = 1;
     final tNumberTriviaModel =
@@ -28,8 +38,7 @@ void main() {
 
     test('''should perform a GET request on a URL with nubmer
         as the endpoint and application/json header''', () async {
-      when(mockHttpClient.get(any, headers: anyNamed('headers')))
-          .thenAnswer((_) async => http.Response(fixture('trivia.json'), 200));
+      setUpMockHttpClientSuccess200();
 
       dataSource.getConcreteNumberTrivia(tNumber);
 
@@ -40,8 +49,7 @@ void main() {
     test(
         'should return NumberTriviaModel when the response code is 200 (success)',
         () async {
-      when(mockHttpClient.get(any, headers: anyNamed('headers')))
-          .thenAnswer((_) async => http.Response(fixture('trivia.json'), 200));
+      setUpMockHttpClientSuccess200();
 
       final result = await dataSource.getConcreteNumberTrivia(tNumber);
 
@@ -50,9 +58,7 @@ void main() {
 
     test('should throw a ServerException when the resopnse code is not 200',
         () async {
-      when(mockHttpClient.get(any, headers: anyNamed('headers')))
-          .thenAnswer((_) async => http.Response('Something went wrong', 400));
-
+      setUpMockHttpClientFailure400();
       final call = await dataSource.getConcreteNumberTrivia;
 
       expect(() => call(tNumber), throwsA(TypeMatcher<ServerException>()));
