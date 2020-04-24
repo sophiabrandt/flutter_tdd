@@ -47,5 +47,15 @@ void main() {
 
       expect(result, equals(tNumberTriviaModel));
     });
+
+    test('should throw a ServerException when the resopnse code is not 200',
+        () async {
+      when(mockHttpClient.get(any, headers: anyNamed('headers')))
+          .thenAnswer((_) async => http.Response('Something went wrong', 400));
+
+      final call = await dataSource.getConcreteNumberTrivia;
+
+      expect(() => call(tNumber), throwsA(TypeMatcher<ServerException>()));
+    });
   });
 }
