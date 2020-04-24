@@ -19,5 +19,13 @@ void main() {
 
       expect(result, Right(123));
     });
+
+    test('should return a Failure when the string is not an integer', () async {
+      final str = 'abc';
+
+      final result = inputConverter.stringToUnsignedInteger(str);
+
+      expect(result, Left(InvalidInputFailure()));
+    });
   });
 }
