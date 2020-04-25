@@ -1,5 +1,6 @@
 import 'package:dartz/dartz.dart';
 import 'package:flutter_tdd/core/error/failures.dart';
+import 'package:flutter_tdd/core/usecases/usecase.dart';
 import 'package:flutter_tdd/core/util/input_converter.dart';
 import 'package:flutter_tdd/features/number_trivia/domain/entities/number_trivia.dart';
 import 'package:flutter_tdd/features/number_trivia/domain/usecases/get_concrete_number_trivia.dart';
@@ -119,6 +120,61 @@ void main() {
       expectLater(bloc, emitsInOrder(expected));
 
       bloc.add(GetTriviaForConcreteNumber(tNumberString));
+    });
+  });
+
+  group('GetTriviaForRandomNumber', () {
+    final tNumberTrivia = NumberTrivia(number: 1, text: 'test trivia');
+
+    test('should get data from the random use case', () async {
+      when(mockGetRandomNumberTrivia(any))
+          .thenAnswer((_) async => Right(tNumberTrivia));
+
+      bloc.add(GetTriviaForRandomNumber());
+      await untilCalled(mockGetRandomNumberTrivia(any));
+
+      verify(mockGetRandomNumberTrivia(NoParams()));
+    });
+
+    test('should emit [Loading, Loaded] when data is gotten successfully',
+        () async {
+      when(mockGetRandomNumberTrivia(any))
+          .thenAnswer((_) async => Right(tNumberTrivia));
+
+      final expected = [Empty(), Loading(), Loaded(trivia: tNumberTrivia)];
+      expectLater(bloc, emitsInOrder(expected));
+
+      bloc.add(GetTriviaForRandomNumber());
+    });
+
+    test('should emit [Loading, Error] when getting data fails', () async {
+      when(mockGetRandomNumberTrivia(any))
+          .thenAnswer((_) async => Left(ServerFailure()));
+
+      final expected = [
+        Empty(),
+        Loading(),
+        Error(message: SERVER_FAILURE_MESSAGE)
+      ];
+      expectLater(bloc, emitsInOrder(expected));
+
+      bloc.add(GetTriviaForRandomNumber());
+    });
+
+    test(
+        'should emit [Loading, Error] with the proper error message when getting data fails',
+        () async {
+      when(mockGetRandomNumberTrivia(any))
+          .thenAnswer((_) async => Left(CacheFailure()));
+
+      final expected = [
+        Empty(),
+        Loading(),
+        Error(message: CACHE_SERVER_FAILURE_MESSAGE)
+      ];
+      expectLater(bloc, emitsInOrder(expected));
+
+      bloc.add(GetTriviaForRandomNumber());
     });
   });
 }
