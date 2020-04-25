@@ -3,6 +3,7 @@ import 'package:flutter_tdd/core/util/input_converter.dart';
 import 'package:flutter_tdd/features/number_trivia/domain/entities/number_trivia.dart';
 import 'package:flutter_tdd/features/number_trivia/domain/usecases/get_concrete_number_trivia.dart';
 import 'package:flutter_tdd/features/number_trivia/domain/usecases/get_random_number_trivia.dart';
+import 'package:flutter_tdd/core/error/failures.dart';
 import 'package:flutter_tdd/features/number_trivia/presentation/bloc/bloc.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
@@ -53,6 +54,16 @@ void main() {
       await untilCalled(mockInputConverter.stringToUnsignedInteger(any));
 
       verify(mockInputConverter.stringToUnsignedInteger(tNumberString));
+    });
+
+    test('should emit [Error] when the input is invalid', () async {
+      when(mockInputConverter.stringToUnsignedInteger(any))
+          .thenReturn(Left(InvalidInputFailure()));
+
+      final expected = [Empty(), Error(message: INVALID_INPUT_FAILURE_MESSAGE)];
+      expectLater(bloc, emitsInOrder(expected));
+
+      bloc.add(GetTriviaForConcreteNumber(tNumberString));
     });
   });
 }
