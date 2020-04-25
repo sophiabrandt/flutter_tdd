@@ -65,5 +65,26 @@ void main() {
 
       bloc.add(GetTriviaForConcreteNumber(tNumberString));
     });
+
+    test('should get data from the concrete use case', () async {
+      setUpMockInputConverterSuccess();
+      when(mockGetConcreteNumberTrivia(any)).thenAnswer((_) async => Right(tNumberTrivia));
+
+      bloc.add(GetTriviaForConcreteNumber(tNumberString));
+      await untilCalled(mockGetConcreteNumberTrivia(any));
+
+      verify(mockGetConcreteNumberTrivia(Params(number: tNumberParsed)));
+    });
+
+    test('should emit [Loading, Loaded] when data is gotten successfully', () async {
+      setUpMockInputConverterSuccess();
+      when(mockGetConcreteNumberTrivia(any)).thenAnswer((_) async => Right(tNumberTrivia));
+
+      final expected = [Empty(), Loading(), Loaded(trivia: tNumberTrivia)];
+      expectLater(bloc, emitsInOrder(expected));
+
+      bloc.add(GetTriviaForConcreteNumber(tNumberString));
+    });
+
   });
 }
