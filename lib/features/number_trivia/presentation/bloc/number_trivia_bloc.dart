@@ -13,7 +13,7 @@ import './bloc.dart';
 import 'number_trivia_event.dart';
 import 'number_trivia_state.dart';
 
-const STRING_SERVER_FAILURE_MESSAGE = 'Server Failure';
+const SERVER_FAILURE_MESSAGE = 'Server Failure';
 const CACHE_SERVER_FAILURE_MESSAGE = 'Cache Failure';
 const INVALID_INPUT_FAILURE_MESSAGE =
     'Invalid input - the number must be a positive integer or zero';
@@ -48,7 +48,11 @@ class NumberTriviaBloc extends Bloc<NumberTriviaEvent, NumberTriviaState> {
         yield Loading();
         final failureOrTrivia =
             await getConcreteNumberTrivia(Params(number: integer));
-        yield failureOrTrivia.fold((failure) => throw UnimplementedError(),
+        yield failureOrTrivia.fold(
+            (failure) => Error(
+                message: failure is ServerFailure
+                    ? SERVER_FAILURE_MESSAGE
+                    : CACHE_SERVER_FAILURE_MESSAGE),
             (trivia) => Loaded(trivia: trivia));
       });
     }
