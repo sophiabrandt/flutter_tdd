@@ -1,18 +1,16 @@
 import 'dart:async';
 
 import 'package:bloc/bloc.dart';
+import 'package:dartz/dartz.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter_tdd/core/error/failures.dart';
+import 'package:flutter_tdd/core/usecases/usecase.dart';
 import 'package:flutter_tdd/core/util/input_converter.dart';
 import 'package:flutter_tdd/features/number_trivia/domain/entities/number_trivia.dart';
 import 'package:flutter_tdd/features/number_trivia/domain/usecases/get_concrete_number_trivia.dart';
 import 'package:flutter_tdd/features/number_trivia/domain/usecases/get_random_number_trivia.dart';
-import 'package:dartz/dartz.dart';
-import 'package:flutter_tdd/core/usecases/usecase.dart';
-import 'package:flutter_tdd/core/error/failures.dart';
 
 import './bloc.dart';
-import 'number_trivia_event.dart';
-import 'number_trivia_state.dart';
 
 const SERVER_FAILURE_MESSAGE = 'Server Failure';
 const CACHE_SERVER_FAILURE_MESSAGE = 'Cache Failure';
