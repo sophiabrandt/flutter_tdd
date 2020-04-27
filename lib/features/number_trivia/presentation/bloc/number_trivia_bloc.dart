@@ -12,9 +12,9 @@ import 'package:flutter_tdd/features/number_trivia/domain/usecases/get_random_nu
 
 import './bloc.dart';
 
-const SERVER_FAILURE_MESSAGE = 'Server Failure';
-const CACHE_SERVER_FAILURE_MESSAGE = 'Cache Failure';
-const INVALID_INPUT_FAILURE_MESSAGE =
+const String SERVER_FAILURE_MESSAGE = 'Server Failure';
+const String CACHE_SERVER_FAILURE_MESSAGE = 'Cache Failure';
+const String INVALID_INPUT_FAILURE_MESSAGE =
     'Invalid input - the number must be a positive integer or zero';
 
 class NumberTriviaBloc extends Bloc<NumberTriviaEvent, NumberTriviaState> {
