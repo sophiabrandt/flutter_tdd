@@ -42,7 +42,7 @@ void main() {
 
       dataSource.getConcreteNumberTrivia(tNumber);
 
-      verify(mockHttpClient.get('http://numbersapi/$tNumber',
+      verify(mockHttpClient.get('http://numbersapi.com/$tNumber',
           headers: {'Content-Type': 'application/json'}));
     });
 
